@@ -3,6 +3,9 @@ var SpriteSheet = function(image, columns, rows){
   this.rows = rows;
   this.columns = columns;
 
+  this.row = 0;
+  this.column = 0;
+
   if(image.src == undefined){
     this.image = new Image();
     this.image.src = image;
@@ -43,9 +46,14 @@ var SpriteSheet = function(image, columns, rows){
     }
   }
 
+  this.setSprite = function(x,y){
+    this.row = x;
+    this.column = y;
+  }
+
   //TODO
-  this.draw = function(ctx, location, spriteX, spriteY){
-  	var t = this.getSprite(0,0);
+  this.draw = function(ctx, location){
+  	var t = this.getSprite(row,column);
   	ctx.putImageData(t,0,0)
   }
 
