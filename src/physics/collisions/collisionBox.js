@@ -1,20 +1,21 @@
 var CollisionBox = function(corner1, corner2, color = '#' + (Math.random() * 0xFFFFFF << 0).toString(16)) {
+  var minX, maxX, minY, maxY = undefined;
   //Align the vectors to go topLeft to bottomRight
   if(corner1.x() < corner2.x()){
-    minX = corner1.xReference;
-    maxX = corner2.xReference;
+    minX = corner1.xComponent;
+    maxX = corner2.xComponent;
   }
   else{
-    minX = corner2.xReference;
-    maxX = corner1.xReference;
+    minX = corner2.xComponent;
+    maxX = corner1.xComponent;
   }
   if(corner1.y() < corner2.y()){
-    minY = corner1.yReference;
-    maxY = corner2.yReference;
+    minY = corner1.yComponent;
+    maxY = corner2.yComponent;
   }
   else{
-    minY = corner2.yReference;
-    maxY = corner1.yReference;
+    minY = corner2.yComponent;
+    maxY = corner1.yComponent;
   }
 	//We are going to store the references to the vectors that make up the two corners of this collision box
 	this.topLeft = new Vector(minX,minY);
@@ -25,10 +26,10 @@ var CollisionBox = function(corner1, corner2, color = '#' + (Math.random() * 0xF
 
 	//Functions to get the sizes of the box if we want
 	this.width = function() {
-		return bottomRight.x() - topLeft.x()
+		return this.bottomRight.x() - this.topLeft.x();
 	};
 	this.height = function() {
-		return bottomRight.y() - topLeft.y()
+		return this.bottomRight.y() - this.topLeft.y();
 	};
 	this.center = function() {
 		return this.topLeft().add(new Vector(this.width(), this.height()).scale(0.5));
@@ -36,7 +37,8 @@ var CollisionBox = function(corner1, corner2, color = '#' + (Math.random() * 0xF
 
 	//Function to draw the collision box if we want to (for debugging)
 	this.draw = function(ctx) {
-		ctx.fillRect(this.topLeft, new Vector(this.width(), this.height()), 0, this.color);
+    ctx.fillStyle = this.color;
+		ctx.fillRect(this.topLeft.x(), this.topLeft.y(), this.width(), this.height());
 	}
 
 	//Function to test if this box is overlapping with another box.

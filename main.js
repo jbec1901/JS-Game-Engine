@@ -68,13 +68,19 @@ function setup(){
 	}
 	window.addEventListener("mousewheel", mouseScroll,{passive: true});
 
-	window.setInterval(tick,spt * 1000);
+	now = performance.now();
+	setTimeout(tick,0);
 
 	window.requestAnimationFrame(draw);
 }
 
 function tick(){
+	var deltaTime = performance.now() - now;
+	now += deltaTime;
 
+	console.log(deltaTime);
+
+	setTimeout(tick,0);
 }
 
 function draw(){

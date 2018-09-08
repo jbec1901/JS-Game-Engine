@@ -1,5 +1,5 @@
 var Shape = function(vertices, color = "#ff0000", rotation = 0) {
-  
+
 	this.vertices = vertices;
 
 	this.color = color;
@@ -11,7 +11,7 @@ var Shape = function(vertices, color = "#ff0000", rotation = 0) {
 		ctx.translate(location.x(), location.y());
 		ctx.rotate(this.rotation);
 
-		this.ctx.beginPath();
+		ctx.beginPath();
 		for (i in vertices) {
 			vertex = vertices[i];
 			ctx.lineTo(vertex.x(), vertex.y());
@@ -19,7 +19,7 @@ var Shape = function(vertices, color = "#ff0000", rotation = 0) {
 		ctx.closePath();
 		ctx.fill();
 
-		ctx.rotate(rthis.rotationad * -1);
+		ctx.rotate(this.rotation * -1);
 		ctx.translate(location.x() * -1, location.y() * -1);
 	}
 }
