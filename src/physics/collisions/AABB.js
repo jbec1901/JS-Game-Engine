@@ -1,4 +1,7 @@
-var CollisionBox = function(corner1, corner2, color = '#' + (Math.random() * 0xFFFFFF << 0).toString(16)) {
+
+//TODO redo input to be a single array
+
+var AABB = function(corner1, corner2, color = '#' + (Math.random() * 0xFFFFFF << 0).toString(16)) {
   var minX, maxX, minY, maxY = undefined;
   //Align the vectors to go topLeft to bottomRight
   if(corner1.x() < corner2.x()){
