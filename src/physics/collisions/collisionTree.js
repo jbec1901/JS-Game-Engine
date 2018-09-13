@@ -1,4 +1,4 @@
-var AABBTree = function(sortingMethod){
+var CollisionTree = function(sortingMethod){
   //The root is the first value one the tree
   this.root = undefined;
 
