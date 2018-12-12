@@ -1,2 +1,1 @@
-# MircoMacro
 # JS-Game-Engine
