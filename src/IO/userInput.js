@@ -12,16 +12,14 @@ class Mouse {
   }
 
   move(func){
-    window.addEventListener("mousemove", (func) => {
-  		this.x = e.x;
-  		this.y = e.y;
+    window.addEventListener("mousemove", (e) => {
+  		func();
   	});
   }
 
   scroll(func){
-    window.addEventListener("mousewheel", (func) => {
-  		this.x = e.x;
-  		this.y = e.y;
+    window.addEventListener("mousewheel", (e) => {
+  		func();
   	}, {passive: true});
   }
 }
@@ -121,8 +119,13 @@ class Controler {
     return this;
   }
 
+  //TODO: add event removers
+  removeDown(){}
+  removeUp(){}
+
   //TODO: button combo trigger
   //TODO: Multi button tirgger
 }
 
 exports.Controler = new Controler();
+exports.Mouse = new Mouse();
