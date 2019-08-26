@@ -24,8 +24,12 @@ class Renderer {
     return layer;
   }
 
-  start(){
-    this.thread.start();
+  start(tickRate){
+    let fps;
+    if(tickRate) {
+      fps = 1000 / tickRate;
+    }
+    this.thread.start(fps);
   }
 
   stop(){
