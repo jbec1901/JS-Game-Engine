@@ -1,0 +1,22 @@
+{
+  "name": "js-game-engine",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "electron ./index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jbec1901/JS-Game-Engine.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jbec1901/JS-Game-Engine/issues"
+  },
+  "homepage": "https://github.com/jbec1901/JS-Game-Engine#readme",
+  "devDependencies": {
+    "electron": "^6.0.4"
+  }
+}
