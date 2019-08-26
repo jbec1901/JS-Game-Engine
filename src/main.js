@@ -1,12 +1,19 @@
-let Renderer = require('./IO/renderer');
-let UI = require('./IO/userInput')
+let Game = new (require('./logic/game'))(30, 60);
 
-let renderer = new Renderer();
-renderer.newLayer(function(){
-  // console.log(this);
+Game.renderer.newStaticLayer(function(){
+  this.ctx.fillStyle = 'red';
+  this.ctx.fillRect(20, 20, 100, 100);
 });
+Game.renderer.newLayer(function(){
+  this.ctx.fillRect(0,0,100,100);
+});
+Game.renderer.newLayer(function(){
+  this.ctx.fillStyle = 'green';
+  this.ctx.fillRect(10, 10, 100, 100);
+});
+Game.start();
+console.log(Game);
 
-renderer.start();
 // function setup(){
 //
 // 	var canvas = document.getElementById('canvas');
