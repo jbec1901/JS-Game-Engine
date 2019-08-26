@@ -20,7 +20,7 @@ class Renderer {
   newStaticLayer(draw){
     let layer = new Layer(draw);
     this.staticLayers.push(layer);
-    layer.draw.bind(this.layers[i])();
+    layer.draw.bind(layer)();
     return layer;
   }
 
@@ -39,17 +39,18 @@ class Layer {
     this.canvas = document.createElement('canvas');
     this.ctx = this.canvas.getContext('2d');
 
+    this.draw = draw;
+
     //Handel resizing
     let resizeCanvas = () => {
   		this.canvas.width = window.innerWidth;
   		this.canvas.height = window.innerHeight;
+      this.draw();
   	}
   	window.addEventListener('resize', resizeCanvas, false);
   	resizeCanvas();
 
     document.body.appendChild(this.canvas);
-
-    this.draw = draw;
   }
 }
 
