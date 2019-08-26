@@ -5,10 +5,10 @@ class Thread {
     this.loop = loop
   }
 
-  start(){
+  start(loop = this.loop){
     if(this.id === -1){
-      if(this.loop !== -1){
-        this.id = setInterval(this.lambda, this.loop);
+      if(loop !== -1){
+        this.id = setInterval(this.lambda, loop);
       }
       else{
         this.id = setTimeout(this.lambda, 0);
