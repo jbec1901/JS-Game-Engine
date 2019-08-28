@@ -1,4 +1,4 @@
-let Thread = require('../logic/thread')
+const Thread = require('../logic/thread')
 
 class Renderer {
   constructor(tickRate = 30){
