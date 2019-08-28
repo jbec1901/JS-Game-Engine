@@ -1,6 +1,6 @@
-let Renderer = require('../IO/renderer');
-let UI = require('../IO/userInput')
-let Thread = require('./thread')
+const Renderer = require('../IO/renderer');
+const UI = require('../IO/userInput')
+const Thread = require('./thread')
 
 class Game {
   constructor(tps, fps){

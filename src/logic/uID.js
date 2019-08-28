@@ -1,4 +1,4 @@
-let Thread = require('./thread')
+const Thread = require('./thread')
 
 //TODO: Dev mode that logs max ID per ms and ID count
 let usedIDs = [];

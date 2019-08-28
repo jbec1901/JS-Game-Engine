@@ -1,89 +1,24 @@
-let Game = new (require('./logic/game'))(30, 60);
+const Game = new (require('./logic/game'))(30, 60);
+const SpriteSheet = require('./IO/spriteSheet');
+const Vector = require('./physics/vector');
+const Entity = require('./physics/entity');
+const AABB = require('./physics/collision/AABB');
 
-Game.renderer.newStaticLayer(function(){
-  this.ctx.fillStyle = 'red';
-  this.ctx.fillRect(20, 20, 100, 100);
-});
-Game.renderer.newLayer(function(){
-  this.ctx.fillRect(0,0,100,100);
-});
-Game.renderer.newLayer(function(){
-  this.ctx.fillStyle = 'green';
-  this.ctx.fillRect(10, 10, 100, 100);
-});
-Game.start();
-console.log(Game);
+let bb = new AABB(new Vector(10, 10));
 
-// function setup(){
-//
-// 	var canvas = document.getElementById('canvas');
-//
-// 	ctx = canvas.getContext('2d');
-//
-// 	function resizeCanvas(){
-// 		canvas.width = window.innerWidth;
-// 		canvas.height = window.innerHeight;
-// 	}
-// 	window.addEventListener('resize', resizeCanvas, false);
-// 	resizeCanvas()
-//
-// 	//All keyboard events
-// 	//Keydown
-// 	function keyDown(event) {
-// 		var key = event.key;
-// 	};
-// 	window.addEventListener("keydown", keyDown);
-// 	//Keyup
-// 	function keyUp(event) {
-// 		var key = event.key;
-// 	};
-// 	window.addEventListener("keyup", keyUp);
-//
-// 	//All mouse events
-// 	//Moves moves
-// 	function mouseMove(event){
-// 		mouseX = event.x;
-// 		mouseY = event.y;
-// 	}
-// 	window.addEventListener("mousemove", mouseMove);
-// 	//Mouse Down
-// 	function mouseDown(event){
-// 			switch(event.which){
-// 				case 1:
-// 					//Left Click
-// 					break;
-// 				case 2:
-// 					//Mid Click
-// 					break;
-// 				case 3:
-// 					//Right Click
-// 					break;
-// 			}
-// 	}
-// 	window.addEventListener("mousedown", mouseDown);
-// 	//Mouse Up
-// 	function mouseUp(event){
-// 		switch(event.which){
-// 			case 1:
-// 				//Left Click
-// 				break;
-// 			case 2:
-// 				//Mid Click
-// 				break;
-// 			case 3:
-// 				//Right Click
-// 				break;
-// 		}
-// 	}
-// 	window.addEventListener("mouseup", mouseUp);
-// 	//Mouse scroles
-// 	function mouseScroll(event){
-// 		Delta = event.wheelDelta;
-// 		DeltaY = event.wheelDeltaY;
-// 		DeltaX = event.wheelDeltaX;
-// 	}
-// 	window.addEventListener("mousewheel", mouseScroll,{passive: true});
-//
+// Game.renderer.newStaticLayer(function(){
+//   this.ctx.fillStyle = 'red';
+//   this.ctx.fillRect(20, 20, 100, 100);
+// });
+Game.renderer.newLayer(function(){
+  bb.apply(new Vector(50, 50)).draw(this.ctx, '#ff0f0f');
+});
+// Game.renderer.newLayer(function(){
+//   this.ctx.fillStyle = 'green';
+//   this.ctx.fillRect(10, 10, 100, 100);
+// });
+// Game.start();
+
 // 	now = performance.now();
 // 	setTimeout(tick,0);
 //
