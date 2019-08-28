@@ -9,6 +9,10 @@ class Vector {
     this.x = x;
   }
 
+  clone(){
+    return new Vector(this.x, this.y);
+  }
+
   //Get angle of vector
   angle(){
     return Math.atan2(this.y,this.x);
@@ -35,3 +39,5 @@ class Vector {
 
   //TODO dot product
 }
+
+module.exports = Vector;
