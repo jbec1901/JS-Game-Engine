@@ -7,7 +7,7 @@ class Thread {
 
   start(loop = this.loop){
     if(this.id === -1){
-      if(loop !== -1){
+      if(loop !== -1 && loop !== undefined){
         this.id = setInterval(this.lambda, loop);
       }
       else{
