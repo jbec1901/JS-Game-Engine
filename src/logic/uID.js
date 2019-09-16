@@ -9,7 +9,6 @@ let queueIDs = [];
 let start = () => {
   new Thread(() => {
     while(queueIDs.length < queueMin){
-      console.log(queueIDs);
       let newID = Math.random().toString(36).substring(2,12);
       let unique = true;
       for(let i = 0; i < usedIDs.length; i++){
