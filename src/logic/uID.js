@@ -7,9 +7,9 @@ const queueMin = 10;
 let queueIDs = [];
 
 let start = () => {
-  console.log('started queuer');
   new Thread(() => {
     while(queueIDs.length < queueMin){
+      console.log(queueIDs);
       let newID = Math.random().toString(36).substring(2,12);
       let unique = true;
       for(let i = 0; i < usedIDs.length; i++){
@@ -35,25 +35,28 @@ let start = () => {
 
 let getID = () => {
   return new Promise(function(resolve, reject) {
-    if(readyIDs.length > 0){
+    if(queueIDs.length > 0){
       //TODO: make sure multithreading dosn't break this
-      let newID = readyIDs.pop();
+      let newID = queueIDs.pop();
       usedIDs.push(newID);
       resolve(newID);
     }
     else{
-      getID()
-      .then((id) => {
-        resolve(id);
-      })
+      setTimeout(() => {
+        getID()
+        .then((id) => {
+          resolve(id);
+        });
+      },1);
     }
   });
 }
 
+//TODO:
 let freeID = (id) => {
 
 }
-
 start();
+
 exports.getID = getID;
 exports.freeID = freeID;
