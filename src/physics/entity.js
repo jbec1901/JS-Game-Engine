@@ -9,6 +9,7 @@ class Entity {
 
   createInstence(location){
     let instence = new Instence(this, location);
+    return instence;
   }
 }
 
