@@ -1,4 +1,5 @@
 const Vector = require('./vector');
+const uID = require('./../logic/uID');
 
 class Entity {
   constructor(spriteSheet, bounds, tick){
@@ -23,6 +24,11 @@ class Instence {
     this.frame = 0;
 
     this.exist = true;
+
+    uID.getID()
+    .then((id) => {
+      this.id = id;
+    });
   }
 
   draw(ctx, scale){
@@ -35,6 +41,12 @@ class Instence {
 
   getBounds(){
     return this.parent.bounds.apply(this.location);
+  }
+
+  destroy(){
+    uID.freeID(this.id);
+    this.exists = false;
+    this.id = undefined;
   }
 }
 
