@@ -56,6 +56,10 @@ class Layer {
 
     document.body.appendChild(this.canvas);
   }
+
+  clear(){
+    this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+  }
 }
 
 module.exports = Renderer;
