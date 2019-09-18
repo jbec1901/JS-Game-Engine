@@ -1,3 +1,7 @@
+/*
+ * Mouse is in charge of logging the mouses position of the cursor on the screen
+ * Mouse buttons are handeled by controller
+ */
 class Mouse {
   constructor(){
     this.x = 0;
@@ -24,15 +28,19 @@ class Mouse {
   }
 }
 
+/*
+ * Controller is in charge of all buttons including the mouse buttons
+ * Mouse buttons are defined in the bindings as:
+ *  MouseL - left mouse button
+ *  MouseM - middle click
+ *  MouseR - right mouse button
+ * Example button:
+ *  KeyD - D button on keyboard
+ */
 class Controler {
   constructor(){
-    this.bindings = [];
-
-    this.downEvents = {};
-    this.upEvents = {};
-
-    this.downCount = {};
-
+    this.bindings = {};
+    this.buttonsDown = {};
     window.addEventListener('mousedown', (e) => {
       switch (e.button) {
         case 0:
@@ -46,10 +54,6 @@ class Controler {
           break;
       }
     });
-    window.addEventListener("keydown", (e) => {
-      this.buttonDown(this.bindings[e.code]);
-    });
-
     window.addEventListener('mouseup', (e) => {
       switch (e.button) {
         case 0:
@@ -63,9 +67,29 @@ class Controler {
           break;
       }
     });
+
+    window.addEventListener("keydown", (e) => {
+      if(this.buttonsDown[e.code] !== true){
+        this.buttonsDown[e.code] = true;
+        this.buttonDown(this.bindings[e.code]);
+      }
+    });
     window.addEventListener("keyup", (e) => {
+      this.buttonsDown[e.code] = false;
       this.buttonUp(this.bindings[e.code]);
     });
+
+    this.downCount = {};
+    window.addEventListener('blur', (e) => {
+      for(let button in this.downCount){
+        while(this.downCount[button] > 0){
+          this.buttonUp(button);
+        }
+      }
+    });
+
+    this.downEvents = {};
+    this.upEvents = {};
   }
 
   buttonDown(button){
@@ -91,9 +115,12 @@ class Controler {
     }
   }
 
+  //NOTE: Buttons can only have one binding each
+  //Added a binding for a button
   addBinding(code, button){
     this.bindings[code] = button;
   }
+  //Removes a binding for a button
   removeBinding(code){
     delete this.bindings[code];
   }
