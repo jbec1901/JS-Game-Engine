@@ -23,13 +23,17 @@ const collisionSpace = new (require('./collision/pool'))();
 
 class Entity {
   constructor(spriteSheet, bounds, tick, options = {
-
+    default: true
   }){
     this.spriteSheet = spriteSheet;
     this.bounds = bounds;
     this.tick = tick;
 
-    entityTypes.push(this);
+    if(options !== undefined){
+      if(options.default === true){
+        entityTypes.push(this);
+      }
+    }
   }
 
   createInstence(location){
