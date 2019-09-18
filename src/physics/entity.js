@@ -29,8 +29,9 @@ class Entity {
     this.bounds = bounds;
     this.tick = tick;
 
-    if(options !== undefined){
-      if(options.default === true){
+    this.options = options;
+    if(this.options !== undefined){
+      if(this.options.default === true){
         entityTypes.push(this);
       }
     }
@@ -53,11 +54,16 @@ class Instence {
 
     this.exist = true;
 
+    if(this.parent.options !== undefined){
+      if(this.parent.options.default === true){
+        entitys.push(this);
+      }
+    }
+
     uID.getID()
     .then((id) => {
       this.id = id;
     });
-    entitys.push(this);
   }
 
   draw(ctx, scale){
