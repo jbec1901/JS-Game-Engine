@@ -46,7 +46,6 @@ class Entity {
 class Instence {
   constructor(parent, location = new Vector()){
     this.parent = parent;
-
     this.location = location;
 
     this.animation = 0;
@@ -57,6 +56,11 @@ class Instence {
     if(this.parent.options !== undefined){
       if(this.parent.options.default === true){
         entitys.push(this);
+      }
+      if(this.parent.options.vars !== undefined){
+        for(let i in this.parent.options.vars){
+          this[i] = this.parent.options.vars[i];
+        }
       }
     }
 
