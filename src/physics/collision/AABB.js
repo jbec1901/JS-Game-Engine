@@ -22,12 +22,13 @@ class BoundingBox {
 
 	//Function to test if this box is overlapping with another box.
 	testCollision(box){
-		if( this.bottomRight.x < box.topLeft.x || this.topLeft.x > box.bottomRight.x ){
+		if(this.bottomRight.x < box.topLeft.x || box.bottomRight.x < this.topLeft.x){
       return false
     };
-		if( this.bottomRight.y < box.topLeft.y || this.topLeft.y > box.bottomRight.y ){
+		if(this.bottomRight.y < box.topLeft.y || box.bottomRight.y < this.topLeft.y){
       return false
     };
+    console.log(this, box);
 		return true;
 	}
 
