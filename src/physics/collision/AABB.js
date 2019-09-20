@@ -28,7 +28,6 @@ class BoundingBox {
 		if(this.bottomRight.y < box.topLeft.y || box.bottomRight.y < this.topLeft.y){
       return false
     };
-    console.log(this, box);
 		return true;
 	}
 
