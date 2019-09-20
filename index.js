@@ -1,4 +1,4 @@
-const { app, BrowserWindow } = require('electron')
+const { app, BrowserWindow } = require('electron');
 
 function createWindow () {
   // Create the browser window.
@@ -8,10 +8,11 @@ function createWindow () {
     webPreferences: {
       nodeIntegration: true
     }
-  })
+  });
 
   // and load the index.html of the app.
-  win.loadFile('./src/index.html')
+  win.loadFile('./src/index.html');
 }
 
-app.on('ready', createWindow)
+app.commandLine.appendSwitch("autoplay-policy", "no-user-gesture-required") ;
+app.on('ready', createWindow);
