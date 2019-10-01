@@ -38,8 +38,14 @@ function mapEntitys(callback){
 }
 
 class Entity {
-  constructor(spriteSheet, bounds, tick, triggers = {}, options = {
-    default: true
+  constructor({
+    spriteSheet,
+    bounds,
+    tick = () => {},
+    triggers = {},
+    options = {
+      default: true,
+    },
   }){
     this.spriteSheet = spriteSheet;
     this.bounds = bounds;
