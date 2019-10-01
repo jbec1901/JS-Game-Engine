@@ -6,6 +6,7 @@ let entitys = [];
 
 //Default Game
 const Game = new (require('./../logic/game'))(0, 60);
+
 //Default Renderer
 Game.renderer.newLayer(function(){
   this.clear();
@@ -13,6 +14,7 @@ Game.renderer.newLayer(function(){
     entity.draw(this.ctx);
   });
 });
+//Default game loop
 Game.start((delta) => {
   mapEntitys((entity) => {
     entity.tick(delta);
@@ -41,6 +43,7 @@ class Entity {
   }){
     this.spriteSheet = spriteSheet;
     this.bounds = bounds;
+    
     this.tick = tick;
 
     this.instences = [];
