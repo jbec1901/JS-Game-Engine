@@ -96,8 +96,8 @@ class Instence {
     this.parent.spriteSheet.drawImage(ctx, this.animation, this.frame, this.location);
   }
 
-  tick(){
-    this.parent.tick.bind(this)();
+  tick(delta){
+    this.parent.tick.bind(this)(delta);
   }
 
   getBounds(){
