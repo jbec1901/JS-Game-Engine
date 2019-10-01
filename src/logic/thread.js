@@ -7,8 +7,18 @@ class Thread {
 
   start(loop = this.loop){
     if(this.id === -1){
-      if(loop !== -1 && loop !== undefined){
+      if(loop > 0 && loop !== undefined){
         this.id = setInterval(this.lambda, loop);
+      }
+      else if(loop === 0 && loop !== undefined){
+        let lastTime = Date.now();
+        loop = () => {
+          let delta = Date.now() - lastTime;
+          this.lambda(delta);
+          lastTime += delta;
+          this.id = setTimeout(loop, 0)
+        }
+        this.id = setTimeout(loop, 0)
       }
       else{
         this.id = setTimeout(this.lambda, 0);
@@ -21,7 +31,7 @@ class Thread {
 
   stop(){
     if(this.id === -1){
-      if(this.loop !== -1){
+      if(this.loop > 0){
         clearInterval(this.id);
       }
       else{
