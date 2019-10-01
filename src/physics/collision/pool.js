@@ -11,13 +11,13 @@ class Pool {
 
   testCollision(object){
     let bounds = object.getBounds();
-    for(let i = this.objects.length; i != -1; i--){
+    for(let i = this.objects.length - 1; i >= 0; i--){
       //If the object dosn't exist anymore remove it from the pool
       if(!this.objects[i].exist){
         this.objects.splice(i, 1);
         continue;
       }
-      if(object.id = this.objects[i].id){
+      if(object.id === this.objects[i].id){
         continue;
       }
       if(this.objects[i].getBounds().testCollision(bounds)){
