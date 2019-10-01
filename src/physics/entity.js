@@ -5,21 +5,35 @@ let entityTypes = [];
 let entitys = [];
 
 //Default Game
-const Game = new (require('./../logic/game'))(30, 60);
+const Game = new (require('./../logic/game'))(0, 60);
 //Default Renderer
 Game.renderer.newLayer(function(){
   this.clear();
-  entitys.map((entity) => {
+  mapEntitys((entity) => {
     entity.draw(this.ctx);
   });
 });
-Game.start(() => {
-  entitys.map((entity) => {
-    entity.tick();
+Game.start((delta) => {
+  mapEntitys((entity) => {
+    entity.tick(delta);
   });
 });
+
 //Default collision space
 const collisionSpace = new (require('./collision/pool'))();
+
+function mapEntitys(callback){
+  entityTypes.map((type) => {
+    for(let i = type.instences.length - 1; i >= 0; i--){
+      let entity = type.instences[i];
+      if(!entity.exist){
+        type.instences.splice(i);
+        return;
+      }
+      callback(entity);
+    }
+  })
+}
 
 class Entity {
   constructor(spriteSheet, bounds, tick, options = {
@@ -28,6 +42,8 @@ class Entity {
     this.spriteSheet = spriteSheet;
     this.bounds = bounds;
     this.tick = tick;
+
+    this.instences = [];
 
     this.options = options;
     if(this.options !== undefined){
@@ -39,6 +55,7 @@ class Entity {
 
   createInstence(location){
     let instence = new Instence(this, location);
+    this.instences.push(instence);
     return instence;
   }
 }
