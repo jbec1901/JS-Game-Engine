@@ -9,7 +9,7 @@ class Pool {
     this.objects.push(object);
   }
 
-  testCollision(object){
+  testCollision(object, filter = () => {return false}){
     let bounds = object.getBounds();
     for(let i = this.objects.length - 1; i >= 0; i--){
       //If the object dosn't exist anymore remove it from the pool
@@ -17,7 +17,7 @@ class Pool {
         this.objects.splice(i, 1);
         continue;
       }
-      if(object.id === this.objects[i].id){
+      if(object.id === this.objects[i].id || filter(this.objects[i])){
         continue;
       }
       if(this.objects[i].getBounds().testCollision(bounds)){
@@ -30,7 +30,7 @@ class Pool {
   //testCollisions is a broader form for testCollision
   //It will test a collition against every other object and return an array of
   //all collided objects
-  testCollisions(object){
+  testCollisions(object, filter = () => {return false}){
     let collitions = [];
     let bounds = object.getBounds();
     for(let i = this.objects.length - 1; i >= 0; i--){
@@ -39,7 +39,7 @@ class Pool {
         this.objects.splice(i, 1);
         continue;
       }
-      if(object.id === this.objects[i].id){
+      if(object.id === this.objects[i].id || filter(this.objects[i])){
         continue;
       }
       if(this.objects[i].getBounds().testCollision(bounds)){
