@@ -30,7 +30,7 @@ function mapEntitys(callback){
         type.instences.splice(i);
         return;
       }
-      callback(entity);
+      callback(entity, type.id);
     }
   })
 }
@@ -51,6 +51,11 @@ class Entity {
         entityTypes.push(this);
       }
     }
+
+    uID.getID()
+    .then((id) => {
+      this.id = id;
+    });
   }
 
   createInstence(location){
