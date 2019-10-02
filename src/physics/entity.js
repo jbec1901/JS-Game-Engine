@@ -15,7 +15,8 @@ class Entity {
     tick = () => {},
     triggers = {},
     collisionSpace,
-    vars = {}
+    collisionFilter = () => { return false },
+    vars = {},
   }){
     this.spriteSheet = spriteSheet;
     this.bounds = bounds;
@@ -24,6 +25,8 @@ class Entity {
     this.triggers = triggers;
 
     this.instences = [];
+
+    this.collisionFilter = collisionFilter;
 
     this.vars = vars;
 
@@ -72,7 +75,7 @@ class Instence {
   tick(delta){
     //If a collider is defiend then we need to do prossessing on it
     if(this.parent.triggers.collision || this.parent.triggers.collisionStart || this.parent.triggers.collisionWhile || this.parent.triggers.collisionEnd){
-      let collision = Game.collisionSpace.testCollision(this);
+      let collision = Game.collisionSpace.testCollision(this, this.parent.collisionFilter);
       if(collision){
         if(this.parent.triggers.collision !== undefined){
           this.parent.triggers.collision.bind(this)();
@@ -94,9 +97,6 @@ class Instence {
       else if(this.parent.triggers.collisionNot !== undefined){
         this.parent.triggers.collisionNot.bind(this)();
       }
-    }
-    if(this.parent.triggers.collisionStart){
-      this.parent.triggers.collisionStart.bind(this)();
     }
     this.parent.tick.bind(this)(delta);
   }
