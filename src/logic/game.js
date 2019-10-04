@@ -66,7 +66,7 @@ class Game {
     if(loop !== undefined){
       this.thread = new Thread((delta) => {
         loop(delta);
-        this.tick();
+        this.tick(delta);
       });
     }
 
@@ -99,7 +99,7 @@ class Game {
 
   tick(delta){
     this.mapGroup('tickables', (tickable) => {
-      tickable.tick(delta)
+      tickable.tick.bind(tickable)(delta);
     });
   };
 
@@ -136,7 +136,7 @@ class Game {
         collideables.splice(i);
         continue;
       }
-      
+
       if(collider.id === collideable.id || filter(collideable)){
         continue;
       }
