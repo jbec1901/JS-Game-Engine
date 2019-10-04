@@ -5,9 +5,38 @@ const Vector = require('./physics/vector');
 const SpriteSheet = require('./IO/spriteSheet');
 const UserInput = require('./IO/userInput');
 
+class Enemy {
+  constructor(start, direction){
+
+    this.position = start;
+    this.velocity = direction
+
+    this.spriteSheet = new SpriteSheet('./../res/red.png', 16, 16);
+    this.collider = new AABB(new Vector(16));
+
+    this.lifeSpan = 1500;
+
+    Entity.call(this);
+  }
+
+  tick(delta){
+    this.lifeSpan -= delta;
+    if(this.lifeSpan < 0){
+      this.exist = false;
+    }
+  }
+
+  collisionFilter(entity){
+    return entity.constructor.name === "Bullet";
+  }
+
+  collisionStart(){
+    this.exist = false;
+  }
+}
+
 class Player {
   constructor(high, low){
-
     this.heightError = 5;
 
     this.high = high;
@@ -19,8 +48,9 @@ class Player {
     this.speed = 0;
     this.rotation = 0;
 
-    this.collider = new AABB(new Vector(16));
     this.spriteSheet = new SpriteSheet('./../res/green.png', 16, 16);
+
+    this.collider = new AABB(new Vector(16));
 
     Entity.call(this);
   }
@@ -45,11 +75,55 @@ class Player {
     this.position = new Vector(Math.sin(this.rotation) * this.radius + 680, Math.cos(this.rotation) * this.radius + this.high + 50);
   }
 
+  collisionFilter(entity){
+    return entity.constructor.name === "Enemy";
+  }
+
   collisionStart(){
     this.exist = false;
   }
 }
+
+class Bullet {
+    constructor(position, velocity){
+
+      this.position = position;
+      this.velocity = velocity;
+
+      this.spriteSheet = new SpriteSheet('./../res/green.png', 4, 4);
+
+      this.collider = new AABB(new Vector(4));
+
+      this.lifeSpan = 1000;
+
+      Entity.call(this);
+    }
+
+    tick(delta){
+      this.lifeSpan -= delta;
+      if(this.lifeSpan < 0){
+        this.exist = false;
+      }
+    }
+
+    collisionFilter(entity){
+      return entity.constructor.name === "Enemy";
+    }
+
+    collisionEnd(){
+      this.exist = false;
+    }
+}
+
 let player = new Player(280, 100);
+
+setInterval(() => {
+  let rotation = Math.random() * Math.PI * 2;
+  let radius = 500;
+  let speed = -4;
+
+  new Enemy(new Vector(Math.sin(rotation) * radius + 680, Math.cos(rotation) * radius + player.high + 50), new Vector(Math.sin(rotation) * speed, Math.cos(rotation) * speed));
+}, 500);
 
 UserInput.Controler.addBinding('KeyW', 'switch');
 UserInput.Controler.addBinding('KeyS', 'switch');
@@ -70,6 +144,22 @@ UserInput.Controler.down('right', () => {
 });
 UserInput.Controler.up('right', () => {
   player.speed = 0;
+});
+
+UserInput.Controler.addBinding('Space', 'shoot');
+UserInput.Controler.down('shoot', () => {
+  if(player.exist){
+    let speed = 5;
+    let direction = new Vector(Math.sin(player.rotation), Math.cos(player.rotation));
+    if(player.targetHeight){
+      direction.scale(new Vector(-speed));
+    }
+    else{
+      direction.scale(new Vector(speed));
+    }
+
+    new Bullet(player.position.clone(), direction);
+  }
 });
 
 Game.start({
