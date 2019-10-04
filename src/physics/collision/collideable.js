@@ -34,7 +34,7 @@ function Collideable(){
     this.collided = false;
   }
 
-  let collitionTick = () => {
+  let tick = () => {
     if(this.collisionWhile || this.collisionStart || this.collisionEnd || this.collisionNot){
       let collision = Game.testCollision(this, this.collisionFilter);
       if(collision){
@@ -57,14 +57,15 @@ function Collideable(){
       }
     }
   }
+
   if(this.tick === undefined){
-    this.tick = collitionTick;
+    this.tick = tick;
   }
   else {
-    let tick = this.tick;
+    const tmp = this.tick;
     this.tick = (delta) => {
-      collitionTick(delta);
-      tick(delta);
+      tmp.bind(this)(delta);
+      tick.bind(this)(delta);
     }
   }
   Game.collideables.push(this);

@@ -14,13 +14,15 @@ function Entity(){
   let tick = (delta) => {
     this.position.join(this.velocity);
   }
+
   if(this.tick === undefined){
     this.tick = tick;
   }
   else {
+    const tmp = this.tick;
     this.tick = (delta) => {
-      tick(delta);
-      this.tick(delta);
+      tmp.bind(this)(delta);
+      tick.bind(this)(delta);
     }
   }
 
