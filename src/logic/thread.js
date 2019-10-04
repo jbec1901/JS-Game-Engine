@@ -1,8 +1,8 @@
 class Thread {
-  constructor(lambda, loop){
+  constructor(lambda){
     this.lambda = lambda;
     this.id = -1;
-    this.loop = loop
+    this.loop = 0
   }
 
   start(loop = this.loop){
