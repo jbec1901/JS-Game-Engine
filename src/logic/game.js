@@ -133,7 +133,7 @@ class Game {
     let bounds = collider.collider.apply(collider.position);
 
     return this.mapGroup('collideables', (collideable) => {
-      if(collider.id === collideable.id || filter(collideable)){
+      if(collider.id === collideable.id || !filter(collideable)){
         return undefined;
       }
       if(collideable.collider.apply(collideable.position).testCollision(bounds)){
