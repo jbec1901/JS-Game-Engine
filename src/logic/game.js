@@ -90,10 +90,13 @@ class Game {
     for(let i = groupObjects.length - 1; i >= 0; i--){
       let object = groupObjects[i];
       if(!object.exist){
-        groupObjects.splice(i);
+        groupObjects.splice(i, 1);
         continue;
       }
-      callback(object, i, groupObjects);
+      let value = callback(object, i, groupObjects);
+      if(value){
+        return value;
+      }
     }
   }
 
@@ -129,22 +132,14 @@ class Game {
   testCollision(collider, filter = () => {return false}){
     let bounds = collider.collider.apply(collider.position);
 
-    let { collideables } = this;
-    for(let i = collideables.length - 1; i >= 0; i--){
-      let collideable = collideables[i];
-      if(!collideable.exist){
-        collideables.splice(i);
-        continue;
-      }
-
+    return this.mapGroup('collideables', (collideable) => {
       if(collider.id === collideable.id || filter(collideable)){
-        continue;
+        return undefined;
       }
       if(collideable.collider.apply(collideable.position).testCollision(bounds)){
         return true;
       }
-      return false;
-    }
+    });
   }
 }
 
