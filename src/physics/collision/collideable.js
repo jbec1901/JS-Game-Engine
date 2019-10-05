@@ -19,20 +19,7 @@ function Collideable(){
     this.position = new Vector();
   }
 
-  if(this.collider === undefined){
-    this.collider = collider;
-  }
-
-  if(this.triggers === undefined){
-    this.triggers = {};
-  }
-  if(this.triggers.collision === undefined){
-    this.triggers.collision = {};
-  }
-
-  if(this.collided === undefined){
-    this.collided = false;
-  }
+  this.collided = false;
 
   let tick = () => {
     if(this.collisionWhile || this.collisionStart || this.collisionEnd || this.collisionNot){
@@ -68,6 +55,7 @@ function Collideable(){
       tick.bind(this)(delta);
     }
   }
+  
   Game.collideables.push(this);
 
   Tickable.apply(this);
