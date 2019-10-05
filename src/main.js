@@ -1,9 +1,29 @@
 const Game = require('./logic/game');
-const Entity = require('./physics/entity');
-const AABB = require('./physics/collision/AABB');
+
 const Vector = require('./physics/vector');
+const AABB = require('./physics/collision/AABB');
+
+const Entity = require('./physics/entity');
+const Particle = require('./IO/particle');
+
 const SpriteSheet = require('./IO/spriteSheet');
+
 const UserInput = require('./IO/userInput');
+
+let score = 0;
+
+class EnemyParticle {
+  constructor(position){
+    this.position = position;
+    this.velocity = new Vector(Math.random() * 5, Math.random() * 5);
+
+    this.color = 'red';
+
+    this.lifeSpan = 50;
+
+    Particle.call(this);
+  }
+}
 
 class Enemy {
   constructor(start, direction){
@@ -16,6 +36,8 @@ class Enemy {
 
     this.lifeSpan = 1500;
 
+    this.trailBuffer = 0;
+
     Entity.call(this);
   }
 
@@ -24,6 +46,13 @@ class Enemy {
     if(this.lifeSpan < 0){
       this.exist = false;
     }
+    else{
+      this.trailBuffer += delta;
+      while(this.trailBuffer > 10){
+        this.trailBuffer -= 10;
+        new EnemyParticle(this.position.clone());
+      }
+    }
   }
 
   collisionFilter(entity){
@@ -31,6 +60,8 @@ class Enemy {
   }
 
   collisionStart(){
+    score++;
+    console.log(score);
     this.exist = false;
   }
 }
@@ -84,6 +115,19 @@ class Player {
   }
 }
 
+class BulletParticle {
+  constructor(position){
+    this.position = position;
+    this.velocity = new Vector(Math.random(), Math.random());
+
+    this.lifeSpan = 50;
+
+    this.color = 'green';
+
+    Particle.call(this);
+  }
+}
+
 class Bullet {
     constructor(position, velocity){
 
@@ -96,6 +140,8 @@ class Bullet {
 
       this.lifeSpan = 1000;
 
+      this.trailBuffer = 0;
+
       Entity.call(this);
     }
 
@@ -103,6 +149,13 @@ class Bullet {
       this.lifeSpan -= delta;
       if(this.lifeSpan < 0){
         this.exist = false;
+      }
+      else{
+        this.trailBuffer += delta;
+        while(this.trailBuffer > 10){
+          this.trailBuffer -= 10;
+          new BulletParticle(this.position.clone());
+        }
       }
     }
 
