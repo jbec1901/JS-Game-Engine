@@ -10,6 +10,8 @@ const SpriteSheet = require('./IO/spriteSheet');
 
 const UserInput = require('./IO/userInput');
 
+const Sound = require('./IO/sound');
+
 let score = 0;
 
 class EnemyParticle {
@@ -211,6 +213,7 @@ UserInput.Controler.down('shoot', () => {
       direction.scale(new Vector(speed));
     }
 
+    Sound.playSound('./../res/laser.mp3');
     new Bullet(player.position.clone(), direction);
   }
 });
