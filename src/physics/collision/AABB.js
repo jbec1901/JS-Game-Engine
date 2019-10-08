@@ -20,6 +20,16 @@ class BoundingBox {
     this.bottomLeft = location.add(new Vector(0, parent.size.y));
   }
 
+  testPoint(point){
+    if(point.x < this.topLeft.x || this.bottomRight.x < point.x){
+      return false;
+    }
+    if(point.y < this.topLeft.y || this.bottomRight.y < point.y){
+      return false;
+    }
+    return true;
+  }
+
 	//Function to test if this box is overlapping with another box.
 	testCollision(box){
 		if(this.bottomRight.x < box.topLeft.x || box.bottomRight.x < this.topLeft.x){
