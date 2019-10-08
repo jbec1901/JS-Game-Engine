@@ -5,6 +5,11 @@ class SpriteSheet{
 
     this.width = width;
     this.height = height;
+
+    this.sheet.onload = () => {
+      this.rows = this.sheet.height / height;
+      this.columns = this.sheet.width / width;
+    }
   }
 
   draw(ctx, row, column, location, scale = 1){
