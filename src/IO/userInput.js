@@ -45,13 +45,13 @@ class Controler {
     window.addEventListener('mousedown', (e) => {
       switch (e.button) {
         case 0:
-          this.buttonDown(this.bindings['MouseL']);
+          this.codeDown('MouseL');
           break;
         case 1:
-          this.buttonDown(this.bindings['MouseM']);
+          this.codeDown('MouseM');
           break;
         case 2:
-          this.buttonDown(this.bindings['MouseR']);
+          this.codeDown('MouseR');
           break;
       }
     });
@@ -59,13 +59,13 @@ class Controler {
     window.addEventListener('mouseup', (e) => {
       switch (e.button) {
         case 0:
-          this.buttonUp(this.bindings['MouseL']);
+          this.codeUp('MouseL');
           break;
         case 1:
-          this.buttonUp(this.bindings['MouseM']);
+          this.codeUp('MouseM');
           break;
         case 2:
-          this.buttonUp(this.bindings['MouseR']);
+          this.codeUp('MouseR');
           break;
       }
     });
