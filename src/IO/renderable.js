@@ -8,13 +8,15 @@ let Renderable = Game.newGroup({
     layers: {},
   },
   constructor: function(){
+    //Renderables need a render function
     if(this.render === undefined){
       throw new Error('Renderables must have a render function');
     }
-
+    //Defualt position is 0, 0
     if(this.position === undefined){
       this.position = new Vector();
     }
+    //Defualt layer is base
     if(this.layer === undefined){
       this.layer = 'base';
     }
@@ -29,10 +31,12 @@ let Renderable = Game.newGroup({
     this.render(layer.ctx);
   },
   tick: (group) => {
+    //Clear screen at the start of every tick
     for(let layer in group.layers){
       group.layers[layer].clear();
     }
   },
+  //Make defualt fps as fast as it can be
   tps: 0,
 });
 
