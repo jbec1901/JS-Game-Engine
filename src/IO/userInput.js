@@ -41,6 +41,7 @@ class Controler {
   constructor(){
     this.bindings = {};
     this.buttonsDown = {};
+    //Add mouse listeners for down
     window.addEventListener('mousedown', (e) => {
       switch (e.button) {
         case 0:
@@ -54,6 +55,7 @@ class Controler {
           break;
       }
     });
+    //Add mouse listeners for up
     window.addEventListener('mouseup', (e) => {
       switch (e.button) {
         case 0:
@@ -71,12 +73,12 @@ class Controler {
     window.addEventListener("keydown", (e) => {
       if(this.buttonsDown[e.code] !== true){
         this.buttonsDown[e.code] = true;
-        this.buttonDown(this.bindings[e.code]);
+        this.codeDown(e.code);
       }
     });
     window.addEventListener("keyup", (e) => {
       this.buttonsDown[e.code] = false;
-      this.buttonUp(this.bindings[e.code]);
+      this.codeUp(e.code);
     });
 
     this.downCount = {};
@@ -89,9 +91,19 @@ class Controler {
     });
 
     this.downEvents = {};
+    this.rawDownEvents = {};
     this.upEvents = {};
+    this.rawUpEvents = {};
   }
 
+  codeDown(code){
+    if(this.rawDownEvents[code] !== undefined){
+      this.rawDownEvents[code].map((func) => {
+        func();
+      });
+    }
+    this.buttonDown(this.bindings[code]);
+  }
   buttonDown(button){
     this.downCount[button]++;
     if(!button || !this.downEvents[button]){
@@ -102,6 +114,15 @@ class Controler {
         func();
       });
     }
+  }
+
+  codeUp(code){
+    if(this.rawUpEvents[code] !== undefined){
+      this.rawUpEvents[code].map((func) => {
+        func();
+      });
+    }
+    this.buttonUp(this.bindings[code]);
   }
   buttonUp(button){
     this.downCount[button]--;
@@ -126,7 +147,7 @@ class Controler {
   }
 
   down(button, func){
-    if(!this.downEvents[button]){
+    if(this.downEvents[button] === undefined){
       this.downEvents[button] = [];
     }
     if(this.downCount[button] === undefined){
@@ -135,8 +156,15 @@ class Controler {
     this.downEvents[button].push(func);
     return this;
   }
+  rawDown(code, func){
+    if(this.rawDownEvents[code] === undefined){
+      this.rawDownEvents[code] = [];
+    }
+    this.rawDownEvents[code].push(func);
+  }
+
   up(button, func){
-    if(!this.upEvents[button]){
+    if(this.upEvents[button] === undefined){
       this.upEvents[button] = [];
     }
     if(this.downCount[button] === undefined){
@@ -144,6 +172,12 @@ class Controler {
     }
     this.upEvents[button].push(func);
     return this;
+  }
+  rawUp(code, func){
+    if(this.rawUpEvents[code] === undefined){
+      this.rawUpEvents[code] = [];
+    }
+    this.rawUpEvents[code].push(func);
   }
 
   //TODO: add event removers
