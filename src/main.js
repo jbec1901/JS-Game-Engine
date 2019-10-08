@@ -219,8 +219,7 @@ UserInput.Controler.down('shoot', () => {
 });
 
 Game.start({
-  loop: () => { },
-  tps: 0,
-  fps: 0,
-  aps: 3,
+  tickable: 0,
+  renderable: 0,
+  animatable: 3,
 });

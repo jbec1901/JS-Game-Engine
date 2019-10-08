@@ -1,13 +1,16 @@
 const Game = require('./game');
 
-function Tickable(){
-  if(this.exist === undefined){
-    this.exist = true;
-  }
-  if(this.tick === undefined){
-    this.tick = (delta) => { }
-  }
-  Game.tickables.push(this);
-};
+let Tickable = Game.newGroup({
+  name: 'tickable',
+  constructor: function(){
+    if(this.tick === undefined){
+      this.tick = () => {};
+    }
+  },
+  each: function(...args){
+    this.tick(...args);
+  },
+  tps: 0,
+});
 
 module.exports = Tickable;

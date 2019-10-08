@@ -1,146 +1,103 @@
 const UI = require('../IO/userInput');
-const Layer = require('../IO/layer');
 const Thread = require('./thread');
 
-class Game {
-  constructor(){
-    this.thread = new Thread(this.tick.bind(this));
-    this.renderer = new Thread(this.render.bind(this));
-    this.animater = new Thread(this.animate.bind(this));
+let groups = [];
 
-    this.tps = 0;
-    this.fps = 0;
-
-    this.tickables = [];
-
-    this.renderables = [];
-    this.animatables = [];
-
-    this.collideables = [];
-
-    this.layers = {};
-  }
-
-  /*  the start function will start the game
-   *  loop<function> can be used it inject some code to run every tick
-   *  tps<int> tps can be used to set the ticks per a second
-   *  fps<int> fps can be used to set the frames per a second
-   */
-  start({ loop, tps, fps, aps }){
-    //Try and stop the threads
+//This function takes in a list of tps's for the differnt groups
+function start(args = {}){
+  //Map over all groups and stop their threads
+  for(let group in groups){
     try {
-      this.thread.stop();
-    }
-    catch(err){
-      console.log(err);
-    }
-    try {
-      this.renderer.stop();
-    }
-    catch(err){
-      console.log(err);
-    }
-    try {
-      this.animater.stop();
-    }
-    catch(err){
-      console.log(err);
-    }
-
-    //If we changed anything with the fps then update the fps
-    if(fps !== undefined){
-      this.fps = (fps === 0)? 0: 1000/fps;
-    }
-
-    //If we changed anything with the fps then update the fps
-    if(aps !== undefined){
-      this.aps = 1000/aps;
-    }
-
-    //If tps was updated then update it in memory
-    if(tps){
-      this.tps = (tps === 0)? 0: 1000/tps;
-    }
-
-    //If we changed anything with loop then update the game loop thread
-    if(loop !== undefined){
-      this.thread = new Thread((delta) => {
-        loop(delta);
-        this.tick(delta);
-      });
-    }
-
-    this.renderer.start(this.fps);
-    this.animater.start(this.aps);
-    this.thread.start(this.tps);
-  }
-
-  stop(){
-    try {
-      this.renderer.stop();
-      this.thread.stop();
+      if(groups[group].thread){
+        groups[group].thread.stop();
+      }
     }
     catch(err){
       console.log(err);
     }
   }
 
-  mapGroup(group, callback){
-    let groupObjects = this[group];
-    for(let i = groupObjects.length - 1; i >= 0; i--){
-      let object = groupObjects[i];
-      if(!object.exist){
-        groupObjects.splice(i, 1);
-        continue;
-      }
-      let value = callback(object, i, groupObjects);
-      if(value){
-        return value;
-      }
+  //Loop over all groups that we are changing the tps for and change them
+  for(let group in args){
+    try{
+      groups[group].tps = (args[group] === 0)? 0: 1000/args[group];
+    }
+    catch(err){
+      throw new Error(`group ${group} not defined`);
     }
   }
 
-  tick(delta){
-    this.mapGroup('tickables', (tickable) => {
-      tickable.tick.bind(tickable)(delta);
-    });
-  };
-
-  render(){
-    //Clear all layers
-    for(let layer in this.layers){
-      this.layers[layer].clear();
+  //Loop over all groups and start them back up the the target tps
+  for(let group in groups){
+    if(groups[group].thread !== undefined){
+      groups[group].thread.start(groups[group].tps);
     }
-
-    this.mapGroup('renderables', (renderable) => {
-      //If its layer doesnt exist then create one
-      if(this.layers[renderable.layer] === undefined){
-        this.layers[renderable.layer] = new Layer();
-      }
-      //Draw it in the context of the layer
-      let layer = this.layers[renderable.layer];
-      renderable.render(layer.ctx);
-    });
-  }
-
-  animate(){
-    this.mapGroup('animatables', (animatable) => {
-      animatable.animate();
-    });
-  }
-
-  testCollision(collider, filter = () => {return false}){
-    let bounds = collider.collider.apply(collider.position);
-
-    return this.mapGroup('collideables', (collideable) => {
-      if(collider.id === collideable.id || !filter(collideable)){
-        return undefined;
-      }
-      if(collideable.collider.apply(collideable.position).testCollision(bounds)){
-        return true;
-      }
-    });
   }
 }
 
-module.exports = new Game();
+//This function just stops all threads
+function stop(){
+  //Map over all groups and stop their threads
+  for(let group in groups){
+    try {
+      if(groups[group].thread){
+        groups[group].thread.stop();
+      }
+    }
+    catch(err){
+      console.log(err);
+    }
+  }
+}
+
+  //This function adds a new group
+function newGroup({ name, constructor, each, tps, tick, vars }){
+  if(name === undefined){
+    throw new Error(`All groups need a name`);
+  }
+  if(constructor === undefined){
+    throw new Error(`Group ${name} needs a constructor`);
+  }
+
+  groups[name] = {
+    objects: [],
+  }
+
+  if(vars){
+    for(let i in vars){
+      groups[name][i] = vars[i];
+    }
+  }
+
+  if(tps !== undefined && (tick !== undefined || each !== undefined)){
+    groups[name].tps = (tps === 0)? 0: 1000/tps;
+    groups[name].thread = new Thread((delta) => {
+      if(tick !== undefined){
+        tick(groups[name]);
+      }
+      if(each !== undefined){
+        let groupObjects = groups[name].objects;
+        for(let i = groupObjects.length - 1; i >= 0; i--){
+          let object = groupObjects[i];
+          if(!object.exist){
+            groupObjects.splice(i, 1);
+            continue;
+          }
+          each.bind(object)(delta, i, groups[name]);
+        }
+      }
+    });
+  }
+
+  return function(){
+    this.exist = true;
+    groups[name].objects.push(this);
+    constructor.bind(this)();
+  }
+}
+
+module.exports = {
+  start: start,
+  stop: stop,
+  newGroup: newGroup,
+}
