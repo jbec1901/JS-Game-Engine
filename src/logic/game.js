@@ -76,15 +76,9 @@ function newGroup({ name, constructor, each, tps, tick, vars }){
         tick(groups[name]);
       }
       if(each !== undefined){
-        let groupObjects = groups[name].objects;
-        for(let i = groupObjects.length - 1; i >= 0; i--){
-          let object = groupObjects[i];
-          if(!object.exist){
-            groupObjects.splice(i, 1);
-            continue;
-          }
+        mapGroup(name, (object, i) => {
           each.bind(object)(delta, i, groups[name]);
-        }
+        });
       }
     });
   }
@@ -96,8 +90,21 @@ function newGroup({ name, constructor, each, tps, tick, vars }){
   }
 }
 
+function mapGroup(group, callback){
+  let groupObjects = groups[group].objects;
+  for(let i = groupObjects.length - 1; i >= 0; i--){
+    let object = groupObjects[i];
+    if(!object.exist){
+      groupObjects.splice(i, 1);
+      continue;
+    }
+    callback(object, i, groups[name]);
+  }
+}
+
 module.exports = {
   start: start,
   stop: stop,
   newGroup: newGroup,
+  mapGroup: mapGroup,
 }
