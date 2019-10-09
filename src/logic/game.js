@@ -12,9 +12,7 @@ function start(args = {}){
         groups[group].thread.stop();
       }
     }
-    catch(err){
-      console.log(err);
-    }
+    catch(err){}
   }
 
   //Loop over all groups that we are changing the tps for and change them
