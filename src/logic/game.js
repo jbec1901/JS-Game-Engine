@@ -44,9 +44,7 @@ function stop(){
         groups[group].thread.stop();
       }
     }
-    catch(err){
-      console.log(err);
-    }
+    catch(err){}
   }
 }
 
