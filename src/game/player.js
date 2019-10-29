@@ -2,6 +2,8 @@ const Vector = require('./../physics/vector');
 const AABB = require('./../physics/collision/AABB');
 
 const Entity = require('./../physics/entity');
+const Clickable = require('./../logic/clickable');
+const Renderable = require('./../IO/renderable');
 
 const SpriteSheet = require('./../IO/spriteSheet')
 const Sound = require('./../IO/sound');
@@ -33,6 +35,8 @@ class Player {
 
     this.direction = 0;
 
+    this.position = new Vector(650, 300);
+
     this.frames = 4;
     this.collider = new AABB(new Vector(32, 98));
 
@@ -47,43 +51,50 @@ class Player {
 }
 
 let player = new Player();
+let spriteSheet = new SpriteSheet('./../res/arrow.png', 16, 16);
+class Arrow {
+  constructor(position, callback, direction){
+    this.position = position;
+    this.collider = new AABB(new Vector(16));
 
-UserInput.Controler.addBinding('KeyW', 'up');
-UserInput.Controler.down('up', () => {
-  player.velocity.y = -1;
-});
-UserInput.Controler.up('up', () => {
-  if(player.velocity.y < 0){
-    player.velocity.y = 0;
-  }
-});
-UserInput.Controler.addBinding('KeyS', 'down');
-UserInput.Controler.down('down', () => {
-  player.velocity.y = 1;
-});
-UserInput.Controler.up('down', () => {
-  if(player.velocity.y > 0){
-    player.velocity.y = 0;
-  }
-});
+    this.leftDown = callback.bind(this);
 
-UserInput.Controler.addBinding('KeyA', 'left');
-UserInput.Controler.down('left', () => {
-  player.velocity.x = -1;
-});
-UserInput.Controler.up('left', () => {
-  if(player.velocity.x < 0){
-    player.velocity.x = 0;
+    this.color = 0;
+
+    this.direction = direction;
+
+    Clickable.apply(this);
+    Renderable.apply(this);
   }
-});
-UserInput.Controler.addBinding('KeyD', 'right');
-UserInput.Controler.down('right', () => {
-  player.velocity.x = 1;
-});
-UserInput.Controler.up('right', () => {
-  if(player.velocity.x > 0){
-    player.velocity.x = 0;
+
+  render(ctx){
+    spriteSheet.draw(ctx, this.color, this.direction, this.position);
   }
-});
+}
+
+let y = 250;
+for(let part in bodyParts){
+  new Arrow(new Vector(600, y), function(){
+    player.body[part]--;
+    if(player.body[part] < 0){
+      player.body[part] = bodyParts[part].rows;
+    }
+    this.color = 1;
+    setTimeout(() => {
+      this.color = 0;
+    }, 100)
+  }, 0);
+  new Arrow(new Vector(700, y), function(){
+    player.body[part]++;
+    if(player.body[part] >= bodyParts[part].rows){
+      player.body[part] = 0;
+    }
+    this.color = 1;
+    setTimeout(() => {
+      this.color = 0;
+    }, 100)
+  }, 2);
+  y += 32;
+}
 
 module.exports = player;
