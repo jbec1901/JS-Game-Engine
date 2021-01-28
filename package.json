@@ -17,6 +17,6 @@
   },
   "homepage": "https://github.com/jbec1901/JS-Game-Engine#readme",
   "devDependencies": {
-    "electron": "^6.0.4"
+    "electron": "^9.4.0"
   }
 }
